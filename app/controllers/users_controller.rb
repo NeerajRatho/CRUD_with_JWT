@@ -29,14 +29,18 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    @user.destroy
+    render json: { message: "User deleted successfully!" }, status: :ok
   end
 
   private
     def user_params
-      params.permit(:name, :email, :password)
+      params.permit(:name, :email, :password, :password_confirmation)
     end
 
     def find_user
       @user = User.find(params[:id])
+      rescue ActiveRecord::RecordNotFound => e
+      render json: {error: e}, status: :not_found
     end
 end
